@@ -1,4 +1,4 @@
-SRCS = main.c srcs/error.c srcs/thread.c
+SRCS = main.c srcs/error.c srcs/thread.c srcs/utils.c
 
 LIBFT   = libft/libft.a
 
@@ -15,7 +15,7 @@ LIBFT_M :
 	@make -s -C libft/ all
 
 ${NAME}:	${OBJS}
-	@echo "Cooking spaghetti"
+	@echo "Cooking spaghettis"
 	@${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBFT}
 
 clean:
