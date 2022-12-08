@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:55:18 by mmidon            #+#    #+#             */
-/*   Updated: 2022/12/08 16:16:35 by mmidon           ###   ########.fr       */
+/*   Updated: 2022/12/08 16:40:48 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -16,8 +16,10 @@
 void	ft_remake(t_args *args, int added)
 {
 	int	new_size;
+	
 
 	new_size = ft_strlen_tab(args->id) + added;
+
 
 }
 
