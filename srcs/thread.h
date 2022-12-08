@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 09:12:50 by mmidon            #+#    #+#             */
-/*   Updated: 2022/11/29 09:14:54 by mmidon           ###   ########.fr       */
+/*   Updated: 2022/12/02 08:33:04 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,6 @@
 # define THREAD_H
 
 void    ft_philo(t_args args);
+void    ft_death(t_args *args);
 
 #endif
