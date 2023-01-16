@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/16 12:09:29 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/16 12:12:41 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -28,7 +28,6 @@ t_philo	ft_new_philo(t_args *args, int nbr)
 	philo.nbr = nbr;
 	philo.meal_counter = 0;
 	philo.ctx = args;
-	printf("nbr %d\n", nbr); 
 	pthread_mutex_init(&args->fork[nbr], NULL);
 	if (pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, &philo))
 		return (philo);
@@ -70,6 +69,7 @@ int	ft_create_philos(t_args *args)
 
 	i = 0;
 	args->id = malloc(sizeof(t_philo *) * args->nbr_philo);
+	args->fork = malloc(sizeof(pthread_mutex_t) * args->nbr_philo);
 	args->life = 1;
 	if (!args->max_meal)
 		args->max_meal = -1;
@@ -79,9 +79,8 @@ int	ft_create_philos(t_args *args)
 		if(!(i % 2))
 			ft_new_philo(args, i);
 		i++;
-		printf("aled\n"); 
 	}
-	i= 0;
+	i = 0;
 	while (i < args->nbr_philo)
 	{
 		if(i % 2)
