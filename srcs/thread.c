@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/16 12:20:19 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/16 12:47:01 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -51,13 +51,15 @@ void	ft_eat(t_philo *philo)
 	else
 		fork = philo->nbr + 1;
 	pthread_mutex_lock(&philo->ctx->fork[fork]);
+	if (!philo->ctx->life)
+		return ;
 	pthread_mutex_unlock(&philo->ctx->mutex);
-	if (!philo->ctx->life)
-		return ;
 	ft_print(philo->nbr, "is taking a fork", philo->ctx->mutex);
 	ft_print(philo->nbr, "is taking a fork", philo->ctx->mutex);
+	pthread_mutex_lock(&philo->ctx->mutex);
 	if (!philo->ctx->life)
 		return ;
+	pthread_mutex_unlock(&philo->ctx->mutex);
 	ft_print(philo->nbr, "is eating", philo->ctx->mutex);
 	ft_usleep(philo->ctx->time_to_eat, 0);
 	pthread_mutex_unlock(&philo->ctx->fork[philo->nbr]);
@@ -67,9 +69,9 @@ void	ft_eat(t_philo *philo)
 	philo->lst_meal = time.tv_usec;
 	philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
 	philo->meal_counter++;
-	pthread_mutex_unlock(&philo->ctx->mutex);
 	if (!philo->ctx->life)
 		return ;
+	pthread_mutex_unlock(&philo->ctx->mutex);
 	ft_sleep(philo->ctx->time_to_sleep, philo->nbr, philo->ctx->mutex);
 }
 
@@ -83,9 +85,8 @@ void	ft_has_eaten(t_philo *philo)
 {
 	struct	timeval time;
 
-	gettimeofday(&time, NULL);
-
 	pthread_mutex_lock(&philo->ctx->mutex);
+	gettimeofday(&time, NULL);
 	if (philo->death_time >= time.tv_usec)
 		philo->ctx->life = 0;
 	pthread_mutex_unlock(&philo->ctx->mutex);
@@ -93,21 +94,28 @@ void	ft_has_eaten(t_philo *philo)
 
 void	ft_philo(t_philo *philo)
 {
-	printf("aled\n"); 
 	printf("PHILO %d\n", philo->nbr); 
 	while (philo->meal_counter < philo->ctx->max_meal)
 	{
-		ft_has_eaten(philo);
+	//	ft_has_eaten(philo);
+		pthread_mutex_lock(&philo->ctx->mutex);
 		if (philo->ctx->life)
 		{
+			pthread_mutex_unlock(&philo->ctx->mutex);
 			ft_print(philo->nbr, "is thinking", philo->ctx->mutex);
 			ft_eat(philo);
 			ft_has_eaten(philo);
 		}
+		else
+			pthread_mutex_unlock(&philo->ctx->mutex);
+		pthread_mutex_lock(&philo->ctx->mutex);
 		if (!philo->ctx->life)
 		{
+			pthread_mutex_unlock(&philo->ctx->mutex);
 			ft_death(philo);
 			break;
 		}
+		else
+			pthread_mutex_unlock(&philo->ctx->mutex);
 	}	
 }

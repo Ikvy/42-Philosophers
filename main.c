@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/16 12:12:41 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/16 12:46:59 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -29,8 +29,8 @@ t_philo	ft_new_philo(t_args *args, int nbr)
 	philo.meal_counter = 0;
 	philo.ctx = args;
 	pthread_mutex_init(&args->fork[nbr], NULL);
-	if (pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, &philo))
-		return (philo);
+	pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, &philo);
+	printf("thread %d\n", nbr);
 	return (philo);
 }
 
@@ -38,13 +38,14 @@ int	ft_join(t_args *args)
 {
 	int	i;
 
-	i = args->nbr_philo - 1;
-	while (i)
+	i = 0;
+	while (i != args->nbr_philo - 1)
 	{
+
 		printf("to join %d\n",i); 
 		if (pthread_join(args->id[i].philo, NULL))
 			return (ft_error("can't join"));
-		i--;
+		i++;
 	}
 	return (0);
 }
