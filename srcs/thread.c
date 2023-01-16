@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2022/12/08 16:10:58 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/16 11:31:29 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -38,77 +38,69 @@ void	ft_sleep(int time, int nbr, pthread_mutex_t mutex)
 	ft_usleep(time, 0);
 }
 
-void	ft_eat(t_philo *philo, t_args *args)
+void	ft_eat(t_philo *philo)
 {
 	struct timeval	time;
 	int	fork;
 
-	fork = 1;
-	if (philo->nbr == args->nbr_philo - 1)
-		fork = - args->nbr_philo;
-	pthread_mutex_lock(&args->mutex);
-	pthread_mutex_lock(&args->fork[philo->nbr]);
-	pthread_mutex_lock(&args->fork[philo->nbr + fork]);
-	pthread_mutex_unlock(&args->mutex);
-	if (!args->life)
+	pthread_mutex_lock(&philo->ctx->mutex);
+	pthread_mutex_lock(&philo->ctx->fork[philo->nbr]);
+	printf("aled %d\n", philo->nbr); 
+	if (philo->nbr == philo->ctx->nbr_philo - 1)
+		fork = 0;
+	else
+		fork = philo->nbr + 1;
+	pthread_mutex_lock(&philo->ctx->fork[fork]);
+	pthread_mutex_unlock(&philo->ctx->mutex);
+	if (!philo->ctx->life)
 		return ;
-	ft_print(philo->nbr, "is taking a fork", args->mutex);
-	ft_print(philo->nbr, "is taking a fork", args->mutex);
-	if (!args->life)
+	ft_print(philo->nbr, "is taking a fork", philo->ctx->mutex);
+	ft_print(philo->nbr, "is taking a fork", philo->ctx->mutex);
+	if (!philo->ctx->life)
 		return ;
-	ft_print(philo->nbr, "is eating", args->mutex);
-	ft_usleep(args->time_to_eat, 0);
-	
+	ft_print(philo->nbr, "is eating", philo->ctx->mutex);
+	ft_usleep(philo->ctx->time_to_eat, 0);
+	pthread_mutex_unlock(&philo->ctx->fork[philo->nbr]);
+	pthread_mutex_unlock(&philo->ctx->fork[fork]);
 	gettimeofday(&time, NULL);
 	philo->lst_meal = time.tv_usec;
-	philo->death_time = philo->lst_meal + args->time_to_die;
-	philo->nbr_meal++;
-	
-	pthread_mutex_unlock(&args->fork[philo->nbr]);
-	pthread_mutex_unlock(&args->fork[philo->nbr + fork]);
-	if(!args->life)
+	philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
+	philo->meal_counter++;
+	if (!philo->ctx->life)
 		return ;
-	ft_sleep(args->time_to_sleep, philo->nbr, args->mutex);
+	ft_sleep(philo->ctx->time_to_sleep, philo->nbr, philo->ctx->mutex);
 }
 
-void	ft_death(t_args *args)
+void	ft_death(t_philo *philo)
 {
-	int	i;
-	struct timeval	time;
+	ft_print(philo->nbr, "is dead", philo->ctx->death);
 
-	i = 0;
+}
 
-	while (args->id[i]->nbr_meal < args->max_meal && args->life)
+void	ft_has_eaten(t_philo *philo)
+{
+	struct	timeval time;
+
+	gettimeofday(&time, NULL);
+	if (philo->death_time >= time.tv_usec)
+		philo->ctx->life = 0;
+}
+
+void	ft_philo(t_philo *philo)
+{
+	printf("PHILO %d\n", philo->nbr); 
+	while (philo->meal_counter < philo->ctx->max_meal)
 	{
-		gettimeofday(&time, NULL);
-		if ((args->id[i]->death_time <= time.tv_usec))
+		if (philo->ctx->life)
 		{
-			pthread_mutex_lock(&args->mutex);
-			args->life = 0;
-			printf("\033[0;33m[%d] philo %d died\033[0m\n", time.tv_usec,i);
-			pthread_mutex_unlock(&args->mutex);
-			return ;
+			ft_print(philo->nbr, "is thinking", philo->ctx->mutex);
+			ft_eat(philo);
+			ft_has_eaten(philo);
 		}
-		if (args->id[i]->nbr_meal >= args->max_meal)
-			return ;
-		i++;
-		if (i >= args->nbr_philo)
-			i = 0;
-	}
-}
-
-void	ft_philo(t_args *args)
-{
-	t_philo	*philo;
-
-	philo = malloc(sizeof(t_philo));
-	philo->nbr = args->i + 1;
-	ft_eat(philo, args);
-	if (!args->life)
-	{
-		free(philo);
-		return ;
-	}
-	ft_print(philo->nbr, "is thinking", args->mutex);
-	free(philo);
+		if (!philo->ctx->life)
+		{
+			ft_death(philo);
+			break;
+		}
+	}	
 }

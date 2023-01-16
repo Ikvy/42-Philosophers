@@ -6,27 +6,32 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2022/12/08 16:16:25 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/16 12:09:29 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
 
 #include "philo.h"
-#include "srcs/error.h" 
+#include "srcs/error.h"
+#include "srcs/utils.h" 
 #include "srcs/thread.h"
 
-t_philo		*ft_new_philo(t_args *args)
+t_philo	ft_new_philo(t_args *args, int nbr)
 {
-	t_philo		*philo;
+	t_philo			philo;
 	struct	timeval	time;
 
-	philo = malloc(sizeof(t_philo));
+//	philo = malloc(sizeof(t_philo));
 	gettimeofday(&time, NULL);
-	philo->lst_meal = time.tv_usec;
-	philo->death_time = philo->lst_meal + args->time_to_die;
-	philo->nbr_meal = 0;
-	if (pthread_create(&philo->philo , NULL, (void *)ft_philo, args))
-		return (NULL);
+	philo.lst_meal = time.tv_usec;
+	philo.death_time = philo.lst_meal + args->time_to_die;
+	philo.nbr = nbr;
+	philo.meal_counter = 0;
+	philo.ctx = args;
+	printf("nbr %d\n", nbr); 
+	pthread_mutex_init(&args->fork[nbr], NULL);
+	if (pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, &philo))
+		return (philo);
 	return (philo);
 }
 
@@ -34,23 +39,18 @@ int	ft_join(t_args *args)
 {
 	int	i;
 
-	i = 0;
-	while (i != args->nbr_philo - 1)
+	i = args->nbr_philo - 1;
+	while (i)
 	{
-		if (pthread_join(args->id[i++]->philo, NULL))
+		printf("to join %d\n",i); 
+		if (pthread_join(args->id[i].philo, NULL))
 			return (ft_error("can't join"));
+		i--;
 	}
 	return (0);
 }
 
-void	ft_impair(t_args *args)
-{
-	ft_remake(args, 1);
-	args->i = args->nbr_philo - 1;
-	args->id[args->nbr_philo - 1] = ft_new_philo(args);
-}
-
-int	ft_forks(t_args *args)
+/*int	ft_forks(t_args *args)
 {
 	int	i;
 
@@ -62,44 +62,33 @@ int	ft_forks(t_args *args)
 			return (ft_error("fork thread"));
 	}
 	return (0);
-}
+}*/
 
 int	ft_create_philos(t_args *args)
 {
-	int	meal_counter;
+	int	i;
 
-	meal_counter = 0;
-	if (!args->id)
-		return (ft_error("malloc error"));
+	i = 0;
+	args->id = malloc(sizeof(t_philo *) * args->nbr_philo);
 	args->life = 1;
 	if (!args->max_meal)
 		args->max_meal = -1;
-	ft_forks(args);
-	printf(" %d philos \n", args->nbr_philo);
-	pthread_create(&args->death, NULL, (void *)ft_death, args);
-	while (meal_counter != args->max_meal && args->life)
+	i = 0;
+	while (i < args->nbr_philo)
 	{
-		if (args->nbr_philo % 2 && args->life)
-			ft_impair(args);
-		args->i = 0;
-		while (args->i < args->nbr_philo - args->nbr_philo % 2 && args->life)
-		{
-			if(!(args->i % 2))
-				args->id[args->i] = ft_new_philo(args);
-			args->i++;
-		}
-		args->i = 0;
-		while (args->i < args->nbr_philo - args->nbr_philo % 2 && args->life)
-		{
-			if(args->i % 2)
-				args->id[args->i] = ft_new_philo(args);
-			args->i++;
-		}
-		meal_counter++;
+		if(!(i % 2))
+			ft_new_philo(args, i);
+		i++;
+		printf("aled\n"); 
+	}
+	i= 0;
+	while (i < args->nbr_philo)
+	{
+		if(i % 2)
+			ft_new_philo(args, i);
+		i++;
 	}
 	ft_join(args);
-	free(args->id);
-//	free(args->fork);
 	return (0);
 }
 

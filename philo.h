@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2022/12/08 16:12:25 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/16 12:05:39 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,19 @@
 # include <stdlib.h>
 # include <limits.h>
 
-typedef struct
+struct	s_args;
+
+typedef struct s_philo
 {
 	pthread_t	philo;
 	int	death_time;
-	int	nbr_meal;
 	int	lst_meal;
+	int	meal_counter;
 	int	nbr;
+	struct s_args	*ctx;
 }		t_philo;
 
-typedef struct
+typedef struct	s_args
 {
 	int				life;
 	int				nbr_philo;
@@ -38,12 +41,11 @@ typedef struct
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				max_meal;
-	int				i;
-//	struct timeval	time;
+	struct timeval	start_time;
 	pthread_mutex_t	mutex;
-	t_philo			**id;
-	pthread_t		death;
 	pthread_mutex_t	*fork;
+	pthread_mutex_t	death;
+	t_philo			*id;
 }		t_args;
 
 #endif
