@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:55:18 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/16 11:32:53 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 08:33:02 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -59,6 +59,14 @@ void	ft_link(t_philo *philo, int nbr)
 	philo = ptr;
 }*/
 
+int	ft_time(int start)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_usec - start);
+}
+
 int	ft_strlen_tab(void *tab)
 {
 	int	i;
@@ -71,13 +79,9 @@ int	ft_strlen_tab(void *tab)
 	return (1);
 }
 
-void	ft_print(int nbr, char *action,  pthread_mutex_t mutex)
+void	ft_print(int nbr, char *action,  t_args *args)
 {
-	struct timeval time;
-
-	(void)mutex;	
-	//pthread_mutex_lock(&mutex);
-	gettimeofday(&time, NULL);
-	printf("\033[0;36m[%d] \033[0m philo %d %s\n", time.tv_usec, nbr, action);
-	//pthread_mutex_unlock(&mutex);
+	pthread_mutex_lock(&args->mutex);
+	printf("\033[0;36m[%d] \033[0m philo %d %s\n", ft_time(args->start), nbr, action);
+	pthread_mutex_unlock(&args->mutex);
 }

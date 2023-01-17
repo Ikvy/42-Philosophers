@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/16 12:11:04 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 08:13:28 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ typedef struct s_philo
 	pthread_t	philo;
 	int	death_time;
 	int	lst_meal;
-	int	meal_counter;
 	int	nbr;
 	struct s_args	*ctx;
 }		t_philo;
@@ -40,8 +39,9 @@ typedef struct	s_args
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				meal_counter;
 	int				max_meal;
-	struct timeval	start_time;
+	int				start;
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	death;

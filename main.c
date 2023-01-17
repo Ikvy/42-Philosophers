@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/16 12:46:59 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 08:45:58 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -19,16 +19,12 @@
 t_philo	ft_new_philo(t_args *args, int nbr)
 {
 	t_philo			philo;
-	struct	timeval	time;
 
 //	philo = malloc(sizeof(t_philo));
-	gettimeofday(&time, NULL);
-	philo.lst_meal = time.tv_usec;
+	philo.lst_meal = ft_time(args->start);
 	philo.death_time = philo.lst_meal + args->time_to_die;
 	philo.nbr = nbr;
-	philo.meal_counter = 0;
 	philo.ctx = args;
-	pthread_mutex_init(&args->fork[nbr], NULL);
 	pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, &philo);
 	printf("thread %d\n", nbr);
 	return (philo);
@@ -38,31 +34,26 @@ int	ft_join(t_args *args)
 {
 	int	i;
 
-	i = 0;
-	while (i != args->nbr_philo - 1)
+	i = -1;
+	printf("nbr philos %d\n", args->nbr_philo); 
+	while (++i < args->nbr_philo)
 	{
-
-		printf("to join %d\n",i); 
+		printf("to be joined %d\n",i);
 		if (pthread_join(args->id[i].philo, NULL))
 			return (ft_error("can't join"));
-		i++;
+		printf("joined %d\n",i);
 	}
+	i = -1;
+	while (++i < args->nbr_philo)
+	{
+		pthread_mutex_destroy(&args->fork[i]);
+	}
+	printf("death\n"); 
+	//pthread_mutex_destroy(&args->death); //////////////bordel de ses morts
+	printf("mutex\n"); 
+	pthread_mutex_destroy(&args->mutex);
 	return (0);
 }
-
-/*int	ft_forks(t_args *args)
-{
-	int	i;
-
-	args->fork = malloc(sizeof(pthread_t) * args->nbr_philo);
-	i = 0;
-	while (i != args->nbr_philo - 1)
-	{
-		if (pthread_mutex_init(&args->fork[i++], NULL))
-			return (ft_error("fork thread"));
-	}
-	return (0);
-}*/
 
 int	ft_create_philos(t_args *args)
 {
@@ -74,20 +65,14 @@ int	ft_create_philos(t_args *args)
 	args->life = 1;
 	if (!args->max_meal)
 		args->max_meal = -1;
-	i = 0;
-	while (i < args->nbr_philo)
-	{
-		if(!(i % 2))
+	i = -1;
+	while (++i < args->nbr_philo)
+		pthread_mutex_init(&args->fork[i], NULL);
+	i = -1;
+	while (++i < args->nbr_philo)
 			ft_new_philo(args, i);
-		i++;
-	}
-	i = 0;
-	while (i < args->nbr_philo)
-	{
-		if(i % 2)
-			ft_new_philo(args, i);
-		i++;
-	}
+	if (args->nbr_philo % 2)
+		ft_print(args->nbr_philo, "is thinking", args);
 	ft_join(args);
 	return (0);
 }
@@ -103,7 +88,9 @@ int	ft_init(t_args *args, char **av)
 	args->time_to_sleep = ft_atoi(av[4]);
 	if (av[5])
 		args->max_meal = ft_atoi(av[5]);
+	args->meal_counter = 0;
 	ft_create_philos(args);
+	args->start = ft_time(0);
 	return (0);
 }
 
