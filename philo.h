@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 08:13:28 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 09:51:26 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef struct s_philo
 	int	death_time;
 	int	lst_meal;
 	int	nbr;
+	pthread_mutex_t	left;
+	pthread_mutex_t	right;
 	struct s_args	*ctx;
 }		t_philo;
 
@@ -45,6 +47,7 @@ typedef struct	s_args
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	death;
+	pthread_mutex_t	pair;
 	t_philo			*id;
 }		t_args;
 
