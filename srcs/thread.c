@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 08:41:58 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 09:01:08 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -51,24 +51,26 @@ int	ft_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->ctx->fork[fork]);
 	pthread_mutex_lock(&philo->ctx->death);
 	if (!philo->ctx->life)
+	{
+		pthread_mutex_unlock(&philo->ctx->death);
 		return (1);
+	}
 	pthread_mutex_unlock(&philo->ctx->death);
 	ft_print(philo->nbr, "is taking a fork", philo->ctx);
 	ft_print(philo->nbr, "is taking a fork", philo->ctx);
 	ft_print(philo->nbr, "is eating", philo->ctx);
-	printf("fork %d %d \n", philo->nbr, fork); 
 	ft_usleep(philo->ctx->time_to_eat, 0);
 	pthread_mutex_unlock(&philo->ctx->fork[philo->nbr]);
 	pthread_mutex_unlock(&philo->ctx->fork[fork]);
-	pthread_mutex_lock(&philo->ctx->mutex);
+	pthread_mutex_lock(&philo->ctx->death);
 	philo->lst_meal = ft_time(philo->ctx->start);
 	philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
-	pthread_mutex_lock(&philo->ctx->death);
-	if (!philo->ctx->life)
-		return (1);
+	if (philo->ctx->life)
+	{
+		pthread_mutex_unlock(&philo->ctx->death);
+		ft_sleep(philo->ctx->time_to_sleep, philo->nbr, philo->ctx);
+	}
 	pthread_mutex_unlock(&philo->ctx->death);
-	pthread_mutex_unlock(&philo->ctx->mutex);
-	ft_sleep(philo->ctx->time_to_sleep, philo->nbr, philo->ctx);
 	return (0);
 }
 
@@ -92,18 +94,16 @@ void	ft_philo(t_philo *philo)
 	}
 	while (1)
 	{
-	//	ft_has_eaten(philo);
 		if (ft_eat(philo))
 		{
 			philo->ctx->life = 0;
 			break;
 		}
-	//	ft_is_dead(philo);
+		ft_is_dead(philo);
 		pthread_mutex_lock(&philo->ctx->death);
 		philo->ctx->meal_counter++;
 		if (!philo->ctx->life || philo->ctx->meal_counter == philo->ctx->max_meal)
 		{
-			philo->ctx->life = 0;
 			pthread_mutex_unlock(&philo->ctx->death);
 			break;
 		}

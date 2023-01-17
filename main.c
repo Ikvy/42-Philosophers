@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 08:45:58 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 08:57:37 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -49,7 +49,7 @@ int	ft_join(t_args *args)
 		pthread_mutex_destroy(&args->fork[i]);
 	}
 	printf("death\n"); 
-	//pthread_mutex_destroy(&args->death); //////////////bordel de ses morts
+//	pthread_mutex_destroy(&args->death); //////////////bordel de ses morts
 	printf("mutex\n"); 
 	pthread_mutex_destroy(&args->mutex);
 	return (0);
