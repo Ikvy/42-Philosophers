@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 11:12:23 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 13:13:11 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -20,14 +20,11 @@ void	ft_new_philo(t_args *args, int nbr)
 {
 	t_philo			philo;
 
-//	pthread_mutex_lock(&args->death);
 	philo.lst_meal = ft_time(args->start);
 	philo.death_time = philo.lst_meal + args->time_to_die;
 	philo.nbr = nbr;
 	philo.ctx = args;
 	philo.meal_counter = 0;
-//	pthread_mutex_unlock(&args->death);
-//	pthread_mutex_lock(&args->pair);
 	philo.left = args->fork[nbr];
 	if (nbr == args->nbr_philo - 1)
 	{
@@ -39,9 +36,10 @@ void	ft_new_philo(t_args *args, int nbr)
 		printf("fork %d %d\n", nbr, nbr + 1);
 		philo.right = args->fork[nbr + 1];
 	}
-//	pthread_mutex_unlock(&args->pair);
+	pthread_mutex_lock(args->mutex);
+	printf("creating %d\n", nbr); 
 	pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, &philo);
-	printf("thread %d\n", nbr);
+	pthread_mutex_unlock(args->mutex);
 }
 
 int	ft_join(t_args *args)
@@ -63,7 +61,7 @@ int	ft_join(t_args *args)
 		pthread_mutex_destroy(&args->fork[i]);
 	}
 	printf("death\n"); 
-//	pthread_mutex_destroy(&args->death); //////////////bordel de ses morts
+	pthread_mutex_destroy(args->death); //////////////bordel de ses morts
 	printf("mutex\n"); 
 	pthread_mutex_destroy(args->mutex);
 	pthread_mutex_destroy(args->pair);
