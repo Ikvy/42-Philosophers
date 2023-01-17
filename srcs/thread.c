@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 09:01:08 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 09:15:41 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -43,23 +43,19 @@ int	ft_eat(t_philo *philo)
 {
 	int	fork;
 
-	pthread_mutex_lock(&philo->ctx->fork[philo->nbr]);
 	if (philo->nbr == philo->ctx->nbr_philo - 1)
 		fork = 0;
 	else
 		fork = philo->nbr + 1;
-	pthread_mutex_lock(&philo->ctx->fork[fork]);
 	pthread_mutex_lock(&philo->ctx->death);
-	if (!philo->ctx->life)
-	{
-		pthread_mutex_unlock(&philo->ctx->death);
-		return (1);
-	}
+	pthread_mutex_lock(&philo->ctx->fork[philo->nbr]);
+	pthread_mutex_lock(&philo->ctx->fork[fork]);
 	pthread_mutex_unlock(&philo->ctx->death);
 	ft_print(philo->nbr, "is taking a fork", philo->ctx);
 	ft_print(philo->nbr, "is taking a fork", philo->ctx);
 	ft_print(philo->nbr, "is eating", philo->ctx);
 	ft_usleep(philo->ctx->time_to_eat, 0);
+
 	pthread_mutex_unlock(&philo->ctx->fork[philo->nbr]);
 	pthread_mutex_unlock(&philo->ctx->fork[fork]);
 	pthread_mutex_lock(&philo->ctx->death);
