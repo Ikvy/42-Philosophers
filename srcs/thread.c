@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 09:56:06 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 10:11:17 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -87,17 +87,20 @@ void	ft_philo(t_philo *philo)
 	}
 	while (1)
 	{
+		if (ft_is_dead(philo))
+			break;
 		if (ft_eat(philo))
 		{
 			philo->ctx->life = 0;
+			printf("ended\n"); 
 			break;
 		}
-		if (ft_is_dead(philo))
-			break;
 		ft_print(philo->nbr, "is thinking", philo->ctx);
 		pthread_mutex_lock(&philo->ctx->death);
-		philo->ctx->meal_counter++;
-		if (!philo->ctx->life || philo->ctx->meal_counter == philo->ctx->max_meal)
+		philo->meal_counter++;
+		printf("meal %d\n", philo->meal_counter);
+		printf("eat %d times\n",philo->ctx->max_meal); 
+		if (!philo->ctx->life || (philo->meal_counter >= philo->ctx->max_meal))
 		{
 			pthread_mutex_unlock(&philo->ctx->death);
 			break;
