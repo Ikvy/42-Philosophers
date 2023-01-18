@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/18 08:56:46 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/18 09:49:45 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -22,7 +22,6 @@ void	ft_new_philo(t_args *args, int nbr)
 
 	philo = malloc(sizeof(t_philo));
 	args->id[nbr] = malloc(sizeof(t_philo));
-	philo->lst_meal = ft_time(args->start);
 	philo->death_time = philo->lst_meal + args->time_to_die;
 	philo->nbr = nbr;
 	philo->ctx = args;
@@ -67,7 +66,10 @@ int	ft_create_philos(t_args *args)
 		args->max_meal = -1;
 	i = -1;
 	while (++i < args->nbr_philo)
+	{
+		printf("\033[0;36m%d \033[0m%d is thinking\n", 0, i + 1);
 		pthread_mutex_init(&args->fork[i], NULL);
+	}
 	i = -1;
 	while (++i < args->nbr_philo)
 			ft_new_philo(args, i);
@@ -87,10 +89,10 @@ int	ft_init(t_args *args, char **av)
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
+	args->start = 0;
 	if (av[5])
 		args->max_meal = ft_atoi(av[5]);
 	ft_create_philos(args);
-	args->start = ft_time(0);
 	return (0);
 }
 
