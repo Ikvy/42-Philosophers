@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/18 09:50:13 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/18 11:27:21 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -59,6 +59,15 @@ int	ft_eat(t_philo *philo)
 	return (0);
 }
 
+void	ft_death(t_args *args)
+{
+	int	i;
+
+	i = 0;
+	while ()
+}
+
+/*
 int	ft_is_dead(t_philo *philo)
 {
 	pthread_mutex_lock(philo->ctx->death);
@@ -71,11 +80,11 @@ int	ft_is_dead(t_philo *philo)
 	}
 	pthread_mutex_unlock(philo->ctx->death);
 	return (0);
-}
+}*/
 
 void	ft_philo(t_philo *philo)
 {
-	philo->lst_meal = ft_time(args->start);
+	philo->lst_meal = ft_time(philo->ctx->start);
 	if (!philo->ctx->start)
 		philo->ctx->start = ft_time(0);
 	if (philo->nbr % 2)

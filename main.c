@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/18 09:49:45 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/18 09:54:20 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -73,6 +73,7 @@ int	ft_create_philos(t_args *args)
 	i = -1;
 	while (++i < args->nbr_philo)
 			ft_new_philo(args, i);
+	ft_death(args);
 	ft_join(args);
 	return (0);
 }
