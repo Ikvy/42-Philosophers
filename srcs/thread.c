@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/18 08:03:08 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/18 08:57:32 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -66,9 +66,6 @@ int	ft_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->left);
 	pthread_mutex_unlock(&philo->right);
 	ft_sleep(philo->ctx->time_to_sleep, philo->nbr, ctx);
-//	if (philo->ctx->life)
-//	{
-//	}
 	return (0);
 }
 
@@ -90,28 +87,22 @@ int	ft_is_dead(t_philo *philo)
 void	ft_philo(t_philo *philo)
 {
 
-	int	nbr;
-
-	nbr = philo->nbr;
 	printf("PHILO %d\n", philo->nbr); 
-	printf("NBR %d\n", nbr); 
 //	printf("philo %p %p %p\n", &philo->ctx->pair, &philo->ctx->death, &philo->ctx->mutex); 
-/*	if (philo->nbr == 1)
+	if (philo->nbr % 2)
 	{
 		ft_print(philo->nbr, "is thinking (waiting)", philo->ctx); ////////////
-		usleep(20000);
-	}*/
-	printf("PHILObis %d\n", philo->nbr); 
-	printf("NBR %d\n", nbr); 
+		usleep(10000);
+	}
 	while (philo->ctx->life)
 	{
 		ft_eat(philo);
 		if (philo->meal_counter == philo->ctx->max_meal)
 		{
-			philo->ctx->life = 0;
 			printf("ended\n"); 
 			break;
 		}
 		ft_print(philo->nbr, "is sleeping", philo->ctx);
 	}
+	ft_print(philo->nbr, "is thinking", philo->ctx);
 }
