@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 11:27:24 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/18 07:50:31 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ typedef struct s_philo
 	int	nbr;
 	pthread_mutex_t	left;
 	pthread_mutex_t	right;
+	pthread_mutex_t	*mutex;
+	pthread_mutex_t	*death;
+	pthread_mutex_t	*pair;
 	struct s_args	*ctx;
 }		t_philo;
 

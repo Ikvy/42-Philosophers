@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:55:18 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 11:02:47 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/17 13:36:19 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -82,6 +82,6 @@ int	ft_strlen_tab(void *tab)
 void	ft_print(int nbr, char *action,  t_args *args)
 {
 	pthread_mutex_lock(args->mutex);
-	printf("\033[0;36m[%d] \033[0m philo %d %s\n", ft_time(args->start), nbr, action);
+	printf("\033[0;36m[%d] \033[0m philo %d %s\n", ft_time(args->start), nbr, action); //////// nbr + 1
 	pthread_mutex_unlock(args->mutex);
 }

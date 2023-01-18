@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/17 13:13:11 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/18 08:02:12 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -18,28 +18,24 @@
 
 void	ft_new_philo(t_args *args, int nbr)
 {
-	t_philo			philo;
+	t_philo			*philo;
 
-	philo.lst_meal = ft_time(args->start);
-	philo.death_time = philo.lst_meal + args->time_to_die;
-	philo.nbr = nbr;
-	philo.ctx = args;
-	philo.meal_counter = 0;
-	philo.left = args->fork[nbr];
+	philo = malloc(sizeof(t_philo));
+	philo->lst_meal = ft_time(args->start);
+	philo->death_time = philo->lst_meal + args->time_to_die;
+	philo->nbr = nbr;
+	philo->ctx = args;
+	philo->meal_counter = 0;
+	philo->left = args->fork[nbr];
+	philo->mutex = args->mutex;
+	philo->pair = args->pair;
+	philo->death = args->death;
 	if (nbr == args->nbr_philo - 1)
-	{
-		philo.right = args->fork[0];
-		printf("fork %d %d\n", nbr, 0);
-	}
+		philo->right = args->fork[0];
 	else
-	{
-		printf("fork %d %d\n", nbr, nbr + 1);
-		philo.right = args->fork[nbr + 1];
-	}
-	pthread_mutex_lock(args->mutex);
-	printf("creating %d\n", nbr); 
-	pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, &philo);
-	pthread_mutex_unlock(args->mutex);
+		philo->right = args->fork[nbr + 1];
+	printf("nbr %d\n",philo->nbr); 
+	pthread_create(&args->id[nbr].philo , NULL, (void *)ft_philo, philo);
 }
 
 int	ft_join(t_args *args)
@@ -91,7 +87,7 @@ int	ft_create_philos(t_args *args)
 int	ft_init(t_args *args, char **av)
 {
 	args->nbr_philo = ft_atoi(av[1]);
-	if (args->nbr_philo <= 1)
+	if (args->nbr_philo < 1) ////////////////////<=
 		return(ft_error("not enough philosophers"));
 	args->pair = malloc(sizeof(pthread_mutex_t));
 	args->mutex = malloc(sizeof(pthread_mutex_t));
@@ -99,7 +95,7 @@ int	ft_init(t_args *args, char **av)
 	pthread_mutex_init(args->mutex, NULL);
 	pthread_mutex_init(args->pair, NULL);
 	pthread_mutex_init(args->death, NULL);
-	printf("init %p %p %p\n", &args->pair, &args->death, &args->mutex);
+//	printf("init %p %p %p\n", &args->pair, &args->death, &args->mutex);
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
