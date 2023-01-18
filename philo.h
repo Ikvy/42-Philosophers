@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/18 08:51:04 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/18 12:37:01 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct	s_args
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				max_meal;
-	int				start;
+	long long int	start;
 	pthread_mutex_t	*mutex;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	*death;
