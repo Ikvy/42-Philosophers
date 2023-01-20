@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 09:21:35 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:20:28 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -17,8 +17,8 @@
 
 void	ft_usleep(int len, t_args *ctx)
 {
-	int	time;
-	int	end_time;
+	long long int	time;
+	long long int	end_time;
 
 	time = ft_time(ctx->start);
 	end_time = time + len;
@@ -41,7 +41,7 @@ int	ft_eat(t_philo *philo)
 
 	ctx = philo->ctx;
 	pthread_mutex_lock(philo->left);
-	pthread_mutex_lock(philo->right);
+	ft_print(philo->nbr, "has taken a fork", ctx);
 	pthread_mutex_lock(philo->ctx->death);
 	if (!philo->ctx->life)
 	{
@@ -51,7 +51,7 @@ int	ft_eat(t_philo *philo)
 		return (1);
 	}
 	pthread_mutex_unlock(philo->ctx->death);
-	ft_print(philo->nbr, "has taken a fork", ctx);
+	pthread_mutex_lock(philo->right);
 	ft_print(philo->nbr, "has taken a fork", ctx);
 	ft_print(philo->nbr, "is eating", ctx);
 	ft_usleep(philo->ctx->time_to_eat, philo->ctx);
@@ -68,21 +68,21 @@ int	ft_eat(t_philo *philo)
 void	ft_death(t_args *args)
 {
 	int	i;
-	long long int	cur_time;
 
-	i = -1;
-	while (args->id[++i] && args->life)
+	i = 0;
+	while (args->life)
 	{
 		pthread_mutex_lock(args->death);
-		cur_time = ft_time(args->start);
-		if (args->id[i]->death_time <= cur_time)
+		if (args->id[i].death_time < ft_time(args->start))
 		{
+			printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
 			args->life = 0;
-			ft_print(args->id[i]->nbr, "is dead", args);
+			ft_print(args->id[i].nbr, "is dead", args);
 		}
 		pthread_mutex_unlock(args->death);
+		i++;
 		if (i >= args->nbr_philo - 1)
-			i = -1;
+			i = 0;
 	}
 }
 
@@ -91,10 +91,7 @@ void	ft_philo(t_philo *philo)
 	int	life;
 
 	life = 1;
-	if (!philo->ctx->start)
-		philo->ctx->start = ft_time(0);
-	philo->lst_meal = ft_time(philo->ctx->start);
-	philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
+	printf("%d death phi %lld\n",philo->nbr, philo->death_time); 
 	if (philo->nbr % 2)
 	{
 		ft_print(philo->nbr,"is thinking",philo->ctx);

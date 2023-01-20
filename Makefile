@@ -7,7 +7,7 @@ OBJS	=  ${SRCS:.c=.o}
 NAME	= philo
 CC		= gcc
 RM		= rm -f
-CFLAGS	= -Wall -Wextra -Werror -fsanitize=thread
+CFLAGS	= -Wall -Wextra -Werror -fsanitize=address
 
 all:	LIBFT_M ${NAME}
 
