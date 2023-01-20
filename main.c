@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 12:35:40 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 12:48:33 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -45,7 +45,9 @@ int	ft_join(t_args *args, pthread_t death)
 	{
 		pthread_join(args->id[i].philo, NULL);
 	}
+	pthread_mutex_lock(args->death);
 	args->all_ate = 1;
+	pthread_mutex_unlock(args->death);
 	pthread_join(death, NULL);
 	i = -1;
 	while (++i < args->nbr_philo)
@@ -64,8 +66,6 @@ int	ft_create_philos(t_args *args)
 	death = malloc(sizeof(pthread_t));
 	args->id = ft_calloc(sizeof(t_philo) , args->nbr_philo);
 	args->fork = malloc(sizeof(pthread_mutex_t) * args->nbr_philo);
-	if (!args->max_meal)
-		args->max_meal = -1;
 	i = -1;
 	while (++i < args->nbr_philo)
 		pthread_mutex_init(&args->fork[i], NULL);
@@ -94,6 +94,7 @@ int	ft_init(t_args *args, char **av)
 	args->start = 0;
 	args->all_ate = 0;
 	args->life = 1;
+	args->max_meal = 0;
 	if (av[5])
 		args->max_meal = ft_atoi(av[5]);
 	ft_create_philos(args);

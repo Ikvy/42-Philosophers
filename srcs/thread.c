@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 12:40:01 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 12:47:58 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -68,20 +68,22 @@ int	ft_eat(t_philo *philo)
 void	ft_death(t_args *args)
 {
 	int	i;
+	int	all_ate;
 
 	i = 0;
-	while (args->life && !args->all_ate)
+	while (args->life && all_ate)
 	{
 		pthread_mutex_lock(args->death);
 //		printf("start %lld\n", args->start); 
 //		printf("time %lld\n", ft_time(0) - args->start); 
-	//	printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
+//	printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
 		if (args->id[i].death_time <= ft_time(0) - args->start)
 		{
 			printf("\n\nDEATH\n\n"); 
 			args->life = 0;
 			ft_print(args->id[i].nbr, "is dead", args);
 		}
+		all_ate = args->all_ate;
 		pthread_mutex_unlock(args->death);
 		i++;
 		if (i >= args->nbr_philo - 1)
