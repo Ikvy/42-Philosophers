@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/18 12:47:52 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 08:58:11 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -26,13 +26,13 @@ void	ft_new_philo(t_args *args, int nbr)
 	philo->nbr = nbr;
 	philo->ctx = args;
 	philo->meal_counter = 0;
-	philo->left = args->fork[nbr];
+	philo->left = &args->fork[nbr];
 	philo->mutex = args->mutex;
 	philo->death = args->death;
 	if (nbr == args->nbr_philo - 1)
-		philo->right = args->fork[0];
+		philo->right = &args->fork[0];
 	else
-		philo->right = args->fork[nbr + 1];
+		philo->right = &args->fork[nbr + 1];
 	pthread_create(&(args->id[nbr]->philo) , NULL, (void *)ft_philo, philo);
 }
 
@@ -49,7 +49,7 @@ int	ft_join(t_args *args)
 	i = -1;
 	while (++i < args->nbr_philo)
 		pthread_mutex_destroy(&args->fork[i]);
-	pthread_mutex_destroy(args->death); //////////////bordel de ses morts
+	pthread_mutex_destroy(args->death);
 	pthread_mutex_destroy(args->mutex);
 	return (0);
 }
@@ -61,16 +61,15 @@ int	ft_create_philos(t_args *args)
 	i = 0;
 	args->id = malloc(sizeof(t_philo *) * args->nbr_philo);
 	args->fork = malloc(sizeof(pthread_mutex_t) * args->nbr_philo);
-	args->life = 1;
 	if (!args->max_meal)
 		args->max_meal = -1;
 	i = -1;
 	while (++i < args->nbr_philo)
 	{
-		printf("\033[0;36m%d \033[0m%d is thinking\n", 0, i + 1);
 		pthread_mutex_init(&args->fork[i], NULL);
 	}
 	i = -1;
+	args->start = ft_time(0);
 	while (++i < args->nbr_philo)
 			ft_new_philo(args, i);
 	ft_death(args);
@@ -87,6 +86,7 @@ int	ft_init(t_args *args, char **av)
 	args->death = malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(args->mutex, NULL);
 	pthread_mutex_init(args->death, NULL);
+	args->life = 1;
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
