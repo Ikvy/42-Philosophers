@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 11:53:38 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 12:40:01 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -73,8 +73,10 @@ void	ft_death(t_args *args)
 	while (args->life && !args->all_ate)
 	{
 		pthread_mutex_lock(args->death);
-		//printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
-		if (args->id[i].death_time <= ft_time(args->start))
+//		printf("start %lld\n", args->start); 
+//		printf("time %lld\n", ft_time(0) - args->start); 
+	//	printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
+		if (args->id[i].death_time <= ft_time(0) - args->start)
 		{
 			printf("\n\nDEATH\n\n"); 
 			args->life = 0;
@@ -92,6 +94,8 @@ void	ft_philo(t_philo *philo)
 	int	life;
 
 	life = 1;
+	philo->lst_meal = 0;
+	philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
 	if (philo->nbr % 2)
 	{
 		ft_print(philo->nbr,"is thinking",philo->ctx);

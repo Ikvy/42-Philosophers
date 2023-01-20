@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 11:56:03 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 12:35:40 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -32,9 +32,7 @@ void	ft_new_philo(t_args *args, int nbr)
 		philo->right = &args->fork[0];
 	else
 		philo->right = &args->fork[nbr + 1];
-	philo->lst_meal = ft_time(0);
-	philo->death_time = philo->lst_meal + args->time_to_die;
-	args->id[nbr].death_time = philo->death_time;
+	args->id[nbr].death_time = args->time_to_die;
 	pthread_create(&(args->id[nbr].philo) , NULL, (void *)ft_philo, philo);
 }
 
