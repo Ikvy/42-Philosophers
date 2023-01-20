@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 11:18:32 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:56:03 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -38,7 +38,7 @@ void	ft_new_philo(t_args *args, int nbr)
 	pthread_create(&(args->id[nbr].philo) , NULL, (void *)ft_philo, philo);
 }
 
-int	ft_join(t_args *args)
+int	ft_join(t_args *args, pthread_t death)
 {
 	int	i;
 
@@ -47,6 +47,8 @@ int	ft_join(t_args *args)
 	{
 		pthread_join(args->id[i].philo, NULL);
 	}
+	args->all_ate = 1;
+	pthread_join(death, NULL);
 	i = -1;
 	while (++i < args->nbr_philo)
 		pthread_mutex_destroy(&args->fork[i]);
@@ -58,8 +60,10 @@ int	ft_join(t_args *args)
 int	ft_create_philos(t_args *args)
 {
 	int	i;
+	pthread_t	*death;
 
 	i = 0;
+	death = malloc(sizeof(pthread_t));
 	args->id = ft_calloc(sizeof(t_philo) , args->nbr_philo);
 	args->fork = malloc(sizeof(pthread_mutex_t) * args->nbr_philo);
 	if (!args->max_meal)
@@ -71,8 +75,9 @@ int	ft_create_philos(t_args *args)
 	args->start = ft_time(0);
 	while (++i < args->nbr_philo)
 			ft_new_philo(args, i);
-	ft_death(args);
-	ft_join(args);
+	pthread_create(death , NULL, (void *)ft_death, args);
+	//ft_death(args); ////////aled
+	ft_join(args, *death);
 	return (0);
 }
 
@@ -89,6 +94,7 @@ int	ft_init(t_args *args, char **av)
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
 	args->start = 0;
+	args->all_ate = 0;
 	args->life = 1;
 	if (av[5])
 		args->max_meal = ft_atoi(av[5]);

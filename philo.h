@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 11:14:14 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:48:10 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <limits.h>
 
 struct	s_args;
+
 
 typedef struct s_philo
 {
@@ -45,11 +46,14 @@ typedef struct	s_args
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				max_meal;
+	int				all_ate;
 	long long int	start;
 	pthread_mutex_t	*mutex;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	*death;
 	t_philo			*id;
 }		t_args;
+
+void    ft_death(t_args *args);
 
 #endif

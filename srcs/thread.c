@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 11:20:28 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/20 11:53:38 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -70,12 +70,13 @@ void	ft_death(t_args *args)
 	int	i;
 
 	i = 0;
-	while (args->life)
+	while (args->life && !args->all_ate)
 	{
 		pthread_mutex_lock(args->death);
-		if (args->id[i].death_time < ft_time(args->start))
+		//printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
+		if (args->id[i].death_time <= ft_time(args->start))
 		{
-			printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
+			printf("\n\nDEATH\n\n"); 
 			args->life = 0;
 			ft_print(args->id[i].nbr, "is dead", args);
 		}
@@ -91,7 +92,6 @@ void	ft_philo(t_philo *philo)
 	int	life;
 
 	life = 1;
-	printf("%d death phi %lld\n",philo->nbr, philo->death_time); 
 	if (philo->nbr % 2)
 	{
 		ft_print(philo->nbr,"is thinking",philo->ctx);
@@ -99,14 +99,15 @@ void	ft_philo(t_philo *philo)
 	}
 	while (life)
 	{
-		ft_eat(philo);
-
+		if (ft_eat(philo))
+			return ;
 		pthread_mutex_lock(philo->ctx->death);
 		life = philo->ctx->life;
 		if (philo->ctx->life)
 		{
 			pthread_mutex_unlock(philo->ctx->death);
 			ft_sleep(philo->ctx->time_to_sleep, philo->nbr, philo->ctx);
+	//		ft_print(philo->nbr, "is thinking", philo->ctx);
 		}
 		else
 			pthread_mutex_unlock(philo->ctx->death);
@@ -114,5 +115,5 @@ void	ft_philo(t_philo *philo)
 			break;
 	}
 	if (philo->ctx->life)
-		ft_print(philo->nbr, "is thinking", philo->ctx);
+		ft_print(philo->nbr, "is thinking [FINISHED]", philo->ctx); ///////aled
 }
