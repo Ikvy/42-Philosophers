@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 12:47:58 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 10:52:59 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -40,9 +40,12 @@ int	ft_eat(t_philo *philo)
 	t_args *ctx;
 
 	ctx = philo->ctx;
-	pthread_mutex_lock(philo->left);
-	ft_print(philo->nbr, "has taken a fork", ctx);
 	pthread_mutex_lock(philo->ctx->death);
+	if (philo->ctx->life)
+	{
+		pthread_mutex_lock(philo->left);
+		ft_print(philo->nbr, "has taken a fork", ctx);
+	}
 	if (!philo->ctx->life)
 	{
 		pthread_mutex_unlock(philo->left);
@@ -50,18 +53,18 @@ int	ft_eat(t_philo *philo)
 		pthread_mutex_unlock(philo->ctx->death);
 		return (1);
 	}
-	pthread_mutex_unlock(philo->ctx->death);
 	pthread_mutex_lock(philo->right);
+//	pthread_mutex_unlock(philo->ctx->death);
 	ft_print(philo->nbr, "has taken a fork", ctx);
 	ft_print(philo->nbr, "is eating", ctx);
 	ft_usleep(philo->ctx->time_to_eat, philo->ctx);
-	pthread_mutex_lock(ctx->death);
-	philo->lst_meal = ft_time(ctx->start);
-	philo->death_time = philo->lst_meal + ctx->time_to_die;
+//	pthread_mutex_lock(philo->ctx->death);
+	philo->lst_meal = ft_time(philo->ctx->start);
+	philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
 	philo->meal_counter++;
-	pthread_mutex_unlock(ctx->death);
 	pthread_mutex_unlock(philo->left);
 	pthread_mutex_unlock(philo->right);
+	pthread_mutex_unlock(ctx->death);
 	return (0);
 }
 
@@ -69,20 +72,26 @@ void	ft_death(t_args *args)
 {
 	int	i;
 	int	all_ate;
+	int	life;
 
 	i = 0;
-	while (args->life && all_ate)
+	pthread_mutex_lock(args->death);
+	all_ate = args->all_ate;
+	life = args->life;
+	pthread_mutex_unlock(args->death);
+	while (life && !all_ate)
 	{
+	//	printf("start %lld\n", args->start); 
+	//	printf("time %lld\n", ft_time(0) - args->start); 
+	//	printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
 		pthread_mutex_lock(args->death);
-//		printf("start %lld\n", args->start); 
-//		printf("time %lld\n", ft_time(0) - args->start); 
-//	printf("death %lld time %lld\n", args->id[i].death_time, ft_time(args->start)); 
 		if (args->id[i].death_time <= ft_time(0) - args->start)
 		{
 			printf("\n\nDEATH\n\n"); 
 			args->life = 0;
 			ft_print(args->id[i].nbr, "is dead", args);
 		}
+		life = args->life;
 		all_ate = args->all_ate;
 		pthread_mutex_unlock(args->death);
 		i++;
@@ -120,6 +129,8 @@ void	ft_philo(t_philo *philo)
 		if (philo->meal_counter == philo->ctx->max_meal)
 			break;
 	}
+	pthread_mutex_lock(philo->ctx->death);
 	if (philo->ctx->life)
 		ft_print(philo->nbr, "is thinking [FINISHED]", philo->ctx); ///////aled
+	pthread_mutex_unlock(philo->ctx->death);
 }
