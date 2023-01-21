@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/21 11:13:50 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 11:38:48 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -58,16 +58,15 @@ int	ft_eat(t_philo *philo)
 	ft_print(philo->nbr, "has taken a fork", ctx);
 	ft_print(philo->nbr, "is eating", ctx);
 	philo->lst_meal = ft_time(0) - philo->ctx->start;
-	//philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
 	philo->ctx->id[philo->nbr].death_time = ft_time(0) - philo->ctx->start + philo->ctx->time_to_die;
 	philo->meal_counter++;
+	pthread_mutex_unlock(ctx->death);
 	ft_usleep(philo->ctx->time_to_eat, philo->ctx);
 //	pthread_mutex_lock(philo->ctx->death);
 //	printf("%d death time %lld\n", philo->nbr, philo->death_time ); 
 //	printf("V2 %d death time %lld\n", philo->nbr, philo->ctx->id[philo->nbr].death_time); 
 	pthread_mutex_unlock(philo->left);
 	pthread_mutex_unlock(philo->right);
-	pthread_mutex_unlock(ctx->death);
 	return (0);
 }
 
