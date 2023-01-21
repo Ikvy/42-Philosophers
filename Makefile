@@ -1,6 +1,4 @@
-SRCS = main.c srcs/error.c srcs/thread.c srcs/utils.c
-
-LIBFT   = libft/libft.a
+SRCS = main.c srcs/error.c srcs/ft_atoi.c srcs/ft_calloc.c srcs/ft_bzero.c srcs/ft_memset.c srcs/thread.c srcs/utils.c
 
 OBJS	=  ${SRCS:.c=.o}
 
@@ -9,14 +7,11 @@ CC		= gcc
 RM		= rm -f
 CFLAGS	= -Wall -Wextra -Werror #-fsanitize=thread
 
-all:	LIBFT_M ${NAME}
-
-LIBFT_M :
-	@make -s -C libft/ all
+all:	${NAME}
 
 ${NAME}:	${OBJS}
 	@echo "Cooking spaghettis"
-	@${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIBFT}
+	@${CC} ${CFLAGS} -o ${NAME} ${OBJS}
 
 clean:
 		${RM} ${OBJS}

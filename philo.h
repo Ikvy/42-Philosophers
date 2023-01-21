@@ -6,14 +6,13 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/21 11:45:36 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 12:11:59 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include "libft/libft.h"
 # include <stdio.h>
 # include <pthread.h>
 # include <unistd.h>
@@ -54,5 +53,8 @@ typedef struct s_args
 }		t_args;
 
 void	ft_death(t_args *args);
-
+void	*ft_calloc(size_t count, size_t size);
+void	ft_bzero(void *s, size_t n);
+int		ft_atoi(const char *str);
+void	*ft_memset(void *b, int c, size_t len);
 #endif
