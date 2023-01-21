@@ -6,14 +6,14 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 09:12:50 by mmidon            #+#    #+#             */
-/*   Updated: 2022/12/11 08:11:43 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 12:00:28 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef THREAD_H
 # define THREAD_H
 
-void    ft_philo(t_args args);
-void    ft_death(t_args *args);
+void	ft_philo(t_args args);
+void	ft_death(t_args *args);
 
 #endif

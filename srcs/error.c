@@ -5,15 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 08:40:43 by mmidon            #+#    #+#             */
-/*   Updated: 2022/11/29 09:12:05 by mmidon           ###   ########.fr       */
+/*   Created: 2023/01/21 11:47:41 by mmidon            #+#    #+#             */
+/*   Updated: 2023/01/21 11:51:05 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include <stdio.h>
 
-#include <stdio.h> 
-
-int    ft_error(char *msg)
+int	ft_error(char *msg)
 {
-    printf("Error : %s\n",msg);
-    return (1);
+	printf("Error : %s\n", msg);
+	return (1);
 }

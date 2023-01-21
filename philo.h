@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/20 11:48:10 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 11:45:36 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 
 struct	s_args;
 
-
 typedef struct s_philo
 {
 	pthread_t		philo;
@@ -38,7 +37,7 @@ typedef struct s_philo
 	struct s_args	*ctx;
 }		t_philo;
 
-typedef struct	s_args
+typedef struct s_args
 {
 	int				life;
 	int				nbr_philo;
@@ -54,6 +53,6 @@ typedef struct	s_args
 	t_philo			*id;
 }		t_args;
 
-void    ft_death(t_args *args);
+void	ft_death(t_args *args);
 
 #endif
