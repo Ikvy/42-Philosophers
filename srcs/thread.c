@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/21 12:38:43 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 12:49:31 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h> 
@@ -95,6 +95,7 @@ void	ft_death(t_args *args)
 void	ft_is_it_the_end(t_philo *philo, int *life)
 {
 	pthread_mutex_lock(philo->ctx->death);
+	ft_print(philo->nbr, "is having mutex death locked to sleep", philo->ctx);
 	*life = philo->ctx->life;
 	if (philo->ctx->life)
 	{
@@ -115,7 +116,7 @@ void	ft_philo(t_philo *philo)
 	if (philo->nbr % 2)
 	{
 		ft_print(philo->nbr, "is thinking", philo->ctx);
-		ft_usleep(10, philo->ctx);
+		ft_usleep(400, philo->ctx);
 	}
 	while (life)
 	{

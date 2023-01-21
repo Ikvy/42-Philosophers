@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/21 12:28:00 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 12:44:49 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -113,5 +113,4 @@ int	main(int ac, char **av)
 	free(args.fork);
 	free(args.death);
 	free(args.mutex);
-	system("leaks philo"); 
 }
