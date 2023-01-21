@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/21 12:04:18 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/21 12:28:00 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -74,6 +74,7 @@ int	ft_create_philos(t_args *args)
 		ft_new_philo(args, i);
 	pthread_create(death, NULL, (void *)ft_death, args);
 	ft_join(args, *death);
+	free(death);
 	return (0);
 }
 
@@ -99,6 +100,7 @@ int	ft_init(t_args *args, char **av)
 	return (0);
 }
 
+
 int	main(int ac, char **av)
 {
 	t_args	args;
@@ -107,5 +109,9 @@ int	main(int ac, char **av)
 		return (ft_error("Wrong number of arguments"));
 	if (ft_init(&args, av))
 		return (1);
+	free(args.id);
+	free(args.fork);
+	free(args.death);
+	free(args.mutex);
+	system("leaks philo"); 
 }
-//system("leaks philo"); 
