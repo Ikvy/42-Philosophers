@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/23 12:14:24 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/23 12:38:13 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -33,6 +33,8 @@ void	ft_new_philo(t_args *args, int nbr)
 		philo->right = &args->fork[nbr + 1];
 	args->id[nbr].death_time = args->time_to_die;
 	pthread_create(&(args->id[nbr].philo), NULL, (void *)ft_philo, philo);
+	if (args->nbr_philo % 2 && nbr == args->nbr_philo - 1)
+		ft_print(nbr, "is thinking", args);
 }
 
 int	ft_join(t_args *args, pthread_t death)
@@ -101,7 +103,6 @@ int	ft_init(t_args *args, char **av)
 	ft_create_philos(args);
 	return (0);
 }
-
 
 int	main(int ac, char **av)
 {
