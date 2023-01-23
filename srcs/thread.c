@@ -3,37 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   thread.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: mmidon <mmidon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/23 12:46:52 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/23 13:09:13 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdio.h> 
+
 #include <unistd.h>
 
 #include "utils.h"
 #include "../philo.h"
-
-void	ft_usleep(int len, t_args *ctx)
-{
-	long long int	time;
-	long long int	end_time;
-
-	time = ft_time(ctx->start);
-	end_time = time + len;
-	while (ft_time(ctx->start) < end_time)
-	{
-		pthread_mutex_lock(ctx->death);
-		if (!ctx->life)
-		{
-			pthread_mutex_unlock(ctx->death);
-			break ;
-		}
-		pthread_mutex_unlock(ctx->death);
-		usleep(50);
-	}
-}
 
 void	ft_sleep(long long int time, int nbr, t_args *args)
 {
@@ -102,24 +82,14 @@ void	ft_death(t_args *args)
 	}
 }
 
-void	ft_is_it_the_end(t_philo *philo, int *life)
-{
-	pthread_mutex_lock(philo->ctx->death);
-	*life = philo->ctx->life;
-	pthread_mutex_unlock(philo->ctx->death);
-}
-
 void	ft_philo(t_philo *philo)
 {
 	int	life;
+
 	life = 1;
 	philo->lst_meal = 0;
 	philo->death_time = philo->lst_meal + philo->ctx->time_to_die;
-	if (philo->nbr % 2)
-	{
-		ft_print(philo->nbr, "is thinking", philo->ctx);
-		ft_usleep(10, philo->ctx);
-	}
+	ft_wait(philo);
 	while (life)
 	{
 		ft_eat(philo);
