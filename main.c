@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/21 12:44:49 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/23 08:43:56 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -21,17 +21,19 @@ void	ft_new_philo(t_args *args, int nbr)
 	t_philo			*philo;
 
 	philo = malloc(sizeof(t_philo));
+	philo->my_life = 1;
 	philo->nbr = nbr;
 	philo->ctx = args;
 	philo->meal_counter = 0;
 	philo->left = &args->fork[nbr];
-	philo->mutex = args->mutex;
-	philo->death = args->death;
-	if (nbr == args->nbr_philo - 1)
+	if (args->nbr_philo == 1)
+		philo->right = NULL;
+	else if (nbr == args->nbr_philo - 1)
 		philo->right = &args->fork[0];
 	else
 		philo->right = &args->fork[nbr + 1];
 	args->id[nbr].death_time = args->time_to_die;
+	ft_print(philo->nbr ,"is created\n", philo->ctx);
 	pthread_create(&(args->id[nbr].philo), NULL, (void *)ft_philo, philo);
 }
 
@@ -44,14 +46,15 @@ int	ft_join(t_args *args, pthread_t death)
 	{
 		pthread_join(args->id[i].philo, NULL);
 	}
-	pthread_mutex_lock(args->death);
+	pthread_mutex_lock(args->hunger);
 	args->all_ate = 1;
-	pthread_mutex_unlock(args->death);
+	pthread_mutex_unlock(args->hunger);
 	pthread_join(death, NULL);
 	i = -1;
 	while (++i < args->nbr_philo)
 		pthread_mutex_destroy(&args->fork[i]);
 	pthread_mutex_destroy(args->death);
+	pthread_mutex_destroy(args->hunger);
 	pthread_mutex_destroy(args->mutex);
 	return (0);
 }
@@ -85,11 +88,14 @@ int	ft_init(t_args *args, char **av)
 		return (ft_error("not enough philosophers"));
 	args->mutex = malloc(sizeof(pthread_mutex_t));
 	args->death = malloc(sizeof(pthread_mutex_t));
+	args->hunger = malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(args->mutex, NULL);
 	pthread_mutex_init(args->death, NULL);
+	pthread_mutex_init(args->hunger, NULL);
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
+	args->has_eaten = 0;
 	args->start = 0;
 	args->all_ate = 0;
 	args->life = 1;
