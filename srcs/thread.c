@@ -6,7 +6,7 @@
 /*   By: mmidon <mmidon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 09:11:35 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/23 13:09:13 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/23 13:27:22 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ int	ft_eat(t_philo *philo)
 	int	life;
 
 	pthread_mutex_lock(philo->left);
+	if (!philo->right)
+	{
+		ft_usleep(philo->ctx->time_to_die, philo->ctx);
+		return (1);
+	}
 	pthread_mutex_lock(philo->right);
 	pthread_mutex_lock(philo->ctx->death);
 	life = philo->ctx->life;
@@ -40,8 +45,8 @@ int	ft_eat(t_philo *philo)
 	philo->ctx->id[philo->nbr].death_time = ft_time(0) - philo->ctx->start
 		+ philo->ctx->time_to_die;
 	pthread_mutex_unlock(philo->ctx->hunger);
-	ft_usleep(philo->ctx->time_to_eat, philo->ctx);
 	philo->meal_counter++;
+	ft_usleep(philo->ctx->time_to_eat, philo->ctx);
 	pthread_mutex_unlock(philo->left);
 	pthread_mutex_unlock(philo->right);
 	return (0);
@@ -94,8 +99,9 @@ void	ft_philo(t_philo *philo)
 	{
 		ft_eat(philo);
 		ft_is_it_the_end(philo, &life);
-		if (philo->meal_counter == philo->ctx->max_meal && life)
+		if (philo->meal_counter == philo->ctx->max_meal && life && philo->ctx->has_eaten != philo->ctx->max_meal - 1)
 		{
+			philo->ctx->has_eaten++;
 			ft_print(philo->nbr, "is thinking", philo->ctx);
 			break ;
 		}
