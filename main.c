@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/23 08:43:56 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/23 12:14:24 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -21,7 +21,6 @@ void	ft_new_philo(t_args *args, int nbr)
 	t_philo			*philo;
 
 	philo = malloc(sizeof(t_philo));
-	philo->my_life = 1;
 	philo->nbr = nbr;
 	philo->ctx = args;
 	philo->meal_counter = 0;
@@ -33,7 +32,6 @@ void	ft_new_philo(t_args *args, int nbr)
 	else
 		philo->right = &args->fork[nbr + 1];
 	args->id[nbr].death_time = args->time_to_die;
-	ft_print(philo->nbr ,"is created\n", philo->ctx);
 	pthread_create(&(args->id[nbr].philo), NULL, (void *)ft_philo, philo);
 }
 
@@ -43,9 +41,7 @@ int	ft_join(t_args *args, pthread_t death)
 
 	i = -1;
 	while (++i < args->nbr_philo)
-	{
 		pthread_join(args->id[i].philo, NULL);
-	}
 	pthread_mutex_lock(args->hunger);
 	args->all_ate = 1;
 	pthread_mutex_unlock(args->hunger);

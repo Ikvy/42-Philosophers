@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:58 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/23 08:20:50 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/23 11:46:38 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ struct	s_args;
 
 typedef struct s_philo
 {
-	int				my_life;
 	pthread_t		philo;
 	long long int	death_time;
 	long long int	lst_meal;
