@@ -6,7 +6,7 @@
 /*   By: mmidon <mmidon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:55:18 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/23 13:10:27 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/23 13:43:17 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,10 @@ void	ft_is_it_the_end(t_philo *philo, int *life)
 	pthread_mutex_unlock(philo->ctx->death);
 }
 
-void	ft_wait(t_philo *philo)
+void	ft_wait(t_philo *philo, int *life)
 {
+	*life = 1;
+	philo->death_time = philo->ctx->time_to_die;
 	if (philo->nbr % 2)
 	{
 		ft_print(philo->nbr, "is thinking", philo->ctx);
