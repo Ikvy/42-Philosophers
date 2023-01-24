@@ -6,7 +6,7 @@
 /*   By: mmidon <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 11:03:31 by mmidon            #+#    #+#             */
-/*   Updated: 2023/01/24 06:50:30 by mmidon           ###   ########.fr       */
+/*   Updated: 2023/01/24 09:18:02 by mmidon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <pthread.h>
@@ -81,6 +81,8 @@ int	ft_create_philos(t_args *args)
 
 int	ft_init(t_args *args, char **av)
 {
+	if (ft_parse(av))
+		return (1);
 	args->nbr_philo = ft_atoi(av[1]);
 	if (args->nbr_philo < 1)
 		return (ft_error("not enough philosophers"));
@@ -97,9 +99,11 @@ int	ft_init(t_args *args, char **av)
 	args->start = 0;
 	args->all_ate = 0;
 	args->life = 1;
-	args->max_meal = 0;
+	args->max_meal = -1;
 	if (av[5])
 		args->max_meal = ft_atoi(av[5]);
+	if (ft_check_after_atoi(args))
+		return (2);
 	ft_create_philos(args);
 	return (0);
 }

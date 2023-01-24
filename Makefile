@@ -1,4 +1,4 @@
-SRCS = main.c srcs/error.c srcs/ft_atoi.c srcs/ft_calloc.c srcs/ft_bzero.c srcs/ft_memset.c srcs/thread.c srcs/utils.c srcs/utils_2.c
+SRCS = main.c srcs/error.c srcs/ft_isdigit.c srcs/ft_atoi.c srcs/ft_calloc.c srcs/ft_bzero.c srcs/ft_memset.c srcs/thread.c srcs/utils.c srcs/utils_2.c
 
 OBJS	=  ${SRCS:.c=.o}
 
